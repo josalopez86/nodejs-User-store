@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import { UserModel } from "../../data";
 import { CustomError, LoginUserDto, RegisterUserDto, UserEntity, ValidateEmailDto } from "../../domain";
 import { bcryptAdapter, JwtAdapter } from "../../config";
-import { EmailService } from "./email.services";
 import { link } from "fs";
+import { EmailService } from "./index";
 
 
 
@@ -52,7 +52,7 @@ export class AuthService{
             const htmlBody =`
             <h1>Validate your email</h1>
             <p>Click on the following link to validate your email.</p>
-            <a href="${link}">Link.</a>`
+            <a href="${link}">Validate your email: ${email}</a>`
 
             this.sendEmail(htmlBody, "validate email", email);
 

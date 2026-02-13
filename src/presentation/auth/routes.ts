@@ -1,10 +1,9 @@
 
 import { Router } from 'express';
 import { AuthController } from './controller';
-import { AuthService } from '../services/auth.service';
-import { EmailService } from '../services/email.services';
 import { envs, JwtAdapter } from '../../config';
 import { env } from 'process';
+import { AuthService, EmailService } from '../services';
 
 
 
