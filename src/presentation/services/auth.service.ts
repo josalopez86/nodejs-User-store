@@ -1,14 +1,24 @@
 import mongoose from "mongoose";
 import { UserModel } from "../../data";
-import { CustomError, LoginUserDto, RegisterUserDto, UserEntity } from "../../domain";
-import { bcryptAdapter } from "../../config";
+import { CustomError, LoginUserDto, RegisterUserDto, UserEntity, ValidateEmailDto } from "../../domain";
+import { bcryptAdapter, JwtAdapter } from "../../config";
+import { EmailService } from "./email.services";
+import { link } from "fs";
 
 
 
 export class AuthService{
-    constructor(){
+    constructor(
+        private readonly emailService: EmailService,
+        private readonly jwtAdapter:JwtAdapter,
+        private readonly apiHost: string
+
+    ){
 
     }
+    
+    //private emailService = new EmailService(envs.MAILER_SERVICE, envs.MAILER_EMAIL, envs.MAILER_SECRET_KEY);
+//    private jwtAdapter = new JwtAdapter(envs.SEED_TOKEN);
 
     public async registerUser(registerUserDto: RegisterUserDto){
 
@@ -29,9 +39,23 @@ export class AuthService{
 
             const {password, ...rest} = user;
 
+            const {email, id} = rest;
+
+            const token = this.jwtAdapter.generateToken({email, id},2000);
+
+            if(!token)
+            {
+                throw CustomError.internalServer("Error while creating JWT.");
+            }
+            const link = `${this.apiHost}/auth/validate-email/${token}`;
+
+            const htmlBody =`<a href="${link}">Verify your email.</a>`
+
+            this.sendEmail(htmlBody, "validate email", email);
+
             return {
                 user: rest,
-                token:"1234"
+                token: token
             };
 
         }catch(error){
@@ -53,18 +77,64 @@ export class AuthService{
                 throw CustomError.badRequest("Wrong email or password.");
             }
 
+            if(!existUser.emailValidated){
+                throw CustomError.badRequest("Email not validated.");
+            }
+
         const {password, ...user} = UserEntity.fromObject(existUser);
+        const {email, id}= user;
+
+        const token = this.jwtAdapter.generateToken({email, id},2000);
+
+            if(!token)
+            {
+                throw CustomError.internalServer("Error while creating JWT.");
+            }
 
         return {
             user: user,
-            token:"1234"
+            token: token
         };
+    }
+
+    public async validateEmail(validateEmailDto: ValidateEmailDto): Promise<UserEntity>{
+
+        const payload = this.jwtAdapter.validateToken(validateEmailDto.token);
+
+        if(!payload){
+            throw CustomError.badRequest("Couldn't get the payload.");
+        }
+
+        const user = await this.GetUserByEmail(payload.email);
+
+        if(!user){
+            throw CustomError.badRequest("Couldn't find the user.");
+        }
+
+        if(payload.id !== user.id){
+            throw CustomError.badRequest("Bad data.");
+        }
+
+        const userUpdated = await UserModel.updateOne(
+            {_id: user.id},
+            {emailValidated: true}
+        );
+
+        console.log(userUpdated);
+
+        payload.emailValidated = true;
+        
+        return payload;
 
     }
 
     private async GetUserByEmail(email: string) {
         return await UserModel.findOne({email: email});
+    }
 
+    private async sendEmail(htmlBody: string, subject: string, to: string ){
+        await this.emailService.sendEmail({htmlBody: htmlBody, subject:subject, to: to});
+        
     }
 
 }

@@ -6,7 +6,12 @@ export const envs = {
 
   PORT: get('PORT').required().asPortNumber(),
   MONGO_DB_NAME: get('MONGO_DB_NAME').required().asString(),
-  MONGO_URL: get('MONGO_URL').required().asString()
+  MONGO_URL: get('MONGO_URL').required().asString(),
+  SEED_TOKEN: get('SEED_TOKEN').required().asString(),
+  MAILER_EMAIL: get('MAILER_EMAIL').required().asString(),
+  MAILER_SECRET_KEY: get('MAILER_SECRET_KEY').required().asString(),
+  MAILER_SERVICE: get('MAILER_SERVICE').required().asString(),
+  API_HOST: get('API_HOST').required().asString(),
 }
 
 
