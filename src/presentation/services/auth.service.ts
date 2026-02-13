@@ -49,7 +49,10 @@ export class AuthService{
             }
             const link = `${this.apiHost}/auth/validate-email/${token}`;
 
-            const htmlBody =`<a href="${link}">Verify your email.</a>`
+            const htmlBody =`
+            <h1>Validate your email</h1>
+            <p>Click on the following link to validate your email.</p>
+            <a href="${link}">Link.</a>`
 
             this.sendEmail(htmlBody, "validate email", email);
 
