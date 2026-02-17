@@ -26,12 +26,21 @@ const productSchema = new mongoose.Schema({
         ref: "User",
         required: true
         },
-    category:{
+    Category:{
         type: Schema.Types.ObjectId,
         ref: "Category",
         required: true
         }
     
+});
+
+productSchema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: function(doc, ret, options) {
+        const { _id, ...rest } = ret;
+    return rest;
+    }
 });
 
 export const ProductModel = mongoose.model("Product", productSchema);

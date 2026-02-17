@@ -8,7 +8,7 @@ interface Options{
 
 export class MongoDatabase{
 
-    static async conect(options: Options){
+    static async connect(options: Options){
 
         const {mongoUrl, dbName} = options;
 
@@ -22,6 +22,19 @@ export class MongoDatabase{
             console.log(error);
             throw error;
         }
+    }
 
+    static async disconnect(){
+        
+        try{
+
+            await mongoose.disconnect();
+
+            return true;
+
+        }catch(error){
+            console.log(error);
+            throw error;
+        }
     }
 }

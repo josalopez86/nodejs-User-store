@@ -10,4 +10,6 @@ export * from "./dtos/auth/validate-email.dto";
 
 export * from "./dtos/category/create-category.dto";
 
+export * from "./dtos/product/create-product.dto";
+
 export * from "./dtos/shared/pagination.dto";

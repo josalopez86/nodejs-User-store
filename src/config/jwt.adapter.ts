@@ -24,7 +24,8 @@ export class JwtAdapter {
             }
             return null;
         }catch(error){
-            throw CustomError.internalServer(`${error}`);
+            console.log({error});
+            throw CustomError.badRequest(`Invalid token.`);
         }
 
     }

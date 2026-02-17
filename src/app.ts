@@ -11,7 +11,7 @@ import { MongoDatabase } from './data';
 
 async function main() {
 
-  await MongoDatabase.conect(
+  await MongoDatabase.connect(
     {
       dbName: envs.MONGO_DB_NAME,
       mongoUrl: envs.MONGO_URL
