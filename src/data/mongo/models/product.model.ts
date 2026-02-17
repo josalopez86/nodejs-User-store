@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
 
     name: {
         type: String,
-        require: [true, "Name is required."],
+        required: [true, "Name is required."],
         unique: true,
     },
     available:{
@@ -24,12 +24,12 @@ const productSchema = new mongoose.Schema({
     User:{
         type: Schema.Types.ObjectId,
         ref: "User",
-        require: true
+        required: true
         },
     category:{
         type: Schema.Types.ObjectId,
         ref: "Category",
-        require: true
+        required: true
         }
     
 });

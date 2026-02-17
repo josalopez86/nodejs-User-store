@@ -42,6 +42,5 @@ export class UserEntity {
         }
         
         return new UserEntity(id||_id, name, email, emailValidated, password, role, img);
-
     }
 }

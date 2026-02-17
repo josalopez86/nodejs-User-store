@@ -102,7 +102,7 @@ export class AuthService{
 
     public async validateEmail(validateEmailDto: ValidateEmailDto): Promise<UserEntity>{
 
-        const payload = this.jwtAdapter.validateToken(validateEmailDto.token);
+        const payload = this.jwtAdapter.validateToken<UserEntity>(validateEmailDto.token);
 
         if(!payload){
             throw CustomError.badRequest("Couldn't get the payload.");
@@ -122,8 +122,6 @@ export class AuthService{
             {_id: user.id},
             {emailValidated: true}
         );
-
-        console.log(userUpdated);
 
         payload.emailValidated = true;
         

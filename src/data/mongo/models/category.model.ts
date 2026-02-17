@@ -1,12 +1,21 @@
 
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
+export interface Category {
+  _id: Types.ObjectId;
+  name: string;
+  available: boolean;
+  User: Types.ObjectId;
+}
+
+//const categorySchema = new mongoose.Schema<Category>({
 const categorySchema = new mongoose.Schema({
 
     name: {
         type: String,
-        require: [true, "Name is required."],        
+        required: [true, "Name is required."],     
+        unique: true,   
     },
     available:{
         type:Boolean,
@@ -15,9 +24,8 @@ const categorySchema = new mongoose.Schema({
     User:{
         type: Schema.Types.ObjectId,
         ref: "User",
-        require: true
+        required: true
         }
-    
 });
 
 export const CategoryModel = mongoose.model("Category", categorySchema);
