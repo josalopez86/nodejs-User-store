@@ -45,7 +45,15 @@ async function main(){
     
     
     //ADD PRODUCTS
-    const products = seedData.products;
+    const products = ProductModel.insertMany(
+        seedData.products.map(product =>{
+            return{
+                ...product,
+                User: users[randomBetween0andX(users.length-1)].id,
+                Category: categories[randomBetween0andX(categories.length-1)].id
+            }
+        })
+    );
 
     console.log("SEEDED.");
 

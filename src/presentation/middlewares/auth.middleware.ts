@@ -4,7 +4,7 @@ import { UserEntity } from "../../domain";
 import { UserModel } from "../../data";
 
 
-export class AuthMiddelware{    
+export class AuthMiddleware{    
 
     constructor(
         public readonly jwtAdapter: JwtAdapter

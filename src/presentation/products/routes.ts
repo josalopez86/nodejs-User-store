@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { AuthMiddelware } from '../middlewares/auth.middelware';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { envs, JwtAdapter } from "../../config";
 import { ProductController } from "./controller";
-import { ProductService } from "../services/product.service";
+import { ProductService } from "../services";
 
 export class ProductRoutes {
 
@@ -13,11 +13,11 @@ export class ProductRoutes {
     const service = new ProductService();
     const controller = new ProductController(service);
     const jwtadapter = new JwtAdapter(envs.SEED_TOKEN);
-    const authMiddelware = new AuthMiddelware(jwtadapter);
+    const authMiddleware = new AuthMiddleware(jwtadapter);
     
     // Definir las rutas
     router.get('/', controller.getProducts );
-    router.post('/', [authMiddelware.validateJWT.bind(authMiddelware)], controller.createProduct );
+    router.post('/', [authMiddleware.validateJWT.bind(authMiddleware)], controller.createProduct );
     router.get('/:id', controller.getproductById );
 
     return router;
