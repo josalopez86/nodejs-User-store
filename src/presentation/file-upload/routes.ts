@@ -10,11 +10,9 @@ export class FileUploadRoutes {
   static get routes(): Router {
 
     const router = Router();
+    const validTypes = ["users", "categories", "products"];
     const service = new FileUploadService();
     const controller = new FileUploadController(service);
-
-    const validTypes = ["users", "categories", "products"];
-    
     
     router.use(TypeMiddleware.validType(validTypes));
     router.use(FileUploadMiddleware.containFiles);
